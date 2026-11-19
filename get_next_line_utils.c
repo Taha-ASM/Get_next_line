@@ -6,7 +6,7 @@
 /*   By: tait-si <tait-si@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 12:37:44 by tait-si           #+#    #+#             */
-/*   Updated: 2026/11/10 14:43:18 by tait-si          ###   ########.fr       */
+/*   Updated: 2026/11/19 14:37:42 by tait-si          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,96 +17,93 @@ size_t	ft_strlen(char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (str[i])
 		i++;
 	return (i);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
-{
-	int		i;
-	int		j;
-	size_t	len1;
-	char	*arr;
-
-	len1 = 0;
-	if (s1)
-		len1 = ft_strlen(s1);
-	arr = malloc(ft_strlen(s2) + len1 + 1);
-	if (arr == NULL)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1 && s1[i])
-		arr[j++] = s1[i++];
-	i = 0;
-	while (s2[i])
-		arr[j++] = s2[i++];
-	arr[j] = '\0';
-	free(s1);
-	return (arr);
-}
-
-char	*ft_strchr(char *s1, int c)
+int	whereareyou(char *str)
 {
 	int	i;
 
-	if (!s1)
-		return (NULL);
 	i = 0;
-	while (s1[i])
+	if (!str)
+		return (1);
+	while (str[i])
 	{
-		if (s1[i] == (char)c)
-			return (&s1[i]);
+		if (str[i] == '\n')
+			return (0);
 		i++;
 	}
-	if (s1[i] == (char)c)
-		return (&s1[i]);
-	return (NULL);
+	return (1);
 }
 
-char	*ft_get_line(char *str)
+char	*ft_strjoin(char *buffer, char *str)
 {
 	int		i;
-	int		j;
+	int		x;
 	char	*arr;
 
 	i = 0;
-	j = 0;
-	if (str == NULL || str[0] == '\0')
+	x = 0;
+	if (!buffer)
+		buffer = "";
+	arr = malloc(ft_strlen(buffer) + ft_strlen(str) + 1);
+	if (!arr)
 		return (NULL);
-	while (str[i] && str[i] != '\n')
-		i++;
-	i++;
-	arr = malloc(i + 1);
-	if (arr == NULL)
-		return (NULL);
-	while (j < i)
-	{
-		arr[j] = str[j];
-		j++;
-	}
-	arr[j] = '\0';
+	while (buffer && buffer[i])
+		arr[x++] = buffer[i++];
+	i = 0;
+	while (str[i])
+		arr[x++] = str[i++];
+	arr[x] = '\0';
 	return (arr);
 }
 
-char	*ft_get_reminder(char *s)
+char	*ft_get_line(char *buffer)
 {
 	int		i;
-	int		j;
-	char	*reminder;
+	int		x;
+	char	*arr;
 
 	i = 0;
-	j = 0;
-	while (s[i] && s[i] != '\n')
+	x = 0;
+	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	i++;
-	reminder = malloc(ft_strlen(s) - i + 1);
-	if (reminder == NULL)
-		return (free(s), NULL);
-	while (s[i])
-		reminder[j++] = s[i++];
-	reminder[j] = '\0';
-	free(s);
-	return (reminder);
+	if (buffer[i] == '\n')
+		i++;
+	arr = malloc(i + 1);
+	if (!arr)
+		return (NULL);
+	while (x < i)
+	{
+		arr[x] = buffer[x];
+		x++;
+	}
+	arr[x] = '\0';
+	return (arr);
 }
+char	*ft_get_reminder(char *buffer)
+{
+	int		i;
+	int		x;
+	char	*arr;
+
+	i = 0;
+	x = 0;
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	if (buffer[i] == '\n')
+		i++;
+	arr = malloc(ft_strlen(buffer) - i + 1);
+	if (!arr)
+		return (NULL);
+	while (buffer[i])
+		arr[x++] = buffer[i++];
+	arr[x] = '\0';
+	return (arr);
+}
+
+

@@ -6,67 +6,55 @@
 /*   By: tait-si <tait-si@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 15:22:39 by tait-si           #+#    #+#             */
-/*   Updated: 2026/11/10 14:38:49 by tait-si          ###   ########.fr       */
+/*   Updated: 2026/11/19 14:41:57 by tait-si          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <fcntl.h>
+#include <stdio.h>
 
-char	*ft_read(int fd, char *buff)
+char	*ft_read(int fd, char *buffer)
 {
 	char	*str;
 	char	*tmp;
 	int		count;
 
-	str = malloc(BUFFER_SIZE + 1);
-	if (str == NULL)
-		return (NULL);
 	count = 1;
-	while ((!buff || !ft_strchr(buff, '\n')) && count != 0) //! need to understand this condition
+	while (whereareyou(buffer) && count != 0)
 	{
+		str = malloc(BUFFER_SIZE + 1);
+		if (!str)
+			return (free(buffer), NULL);
 		count = read(fd, str, BUFFER_SIZE);
-		if (count == -1)
+		if (count < 0)
 			return (free(str), NULL);
 		str[count] = '\0';
-		tmp = ft_strjoin(buff, str);
-		if (tmp == NULL)
-			return (NULL);
-		buff = tmp;
+		tmp = ft_strjoin(buffer, str);
+		if (!tmp)
+			return (free(str), NULL);
+		free(str);
+		free(buffer);
+		buffer = tmp;
 	}
-	free(str);
-	return (buff);
+	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buff;
+	static char	*buffer;
 	char		*line;
+	char		*tmp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &buffer, 0) < 0)
 		return (NULL);
-	buff = ft_read(fd, buff);
-	if (buff == NULL || buff[0] == '\0')
-	{
-		free(buff);
-		buff = NULL;
-		return (NULL);
-	}
-	line = ft_get_line(buff);
-	buff = ft_get_reminder(buff);
+	buffer = ft_read(fd, buffer);
+	if (!buffer || buffer[0] == '\0')
+		return (free(buffer), buffer = NULL, NULL);
+	line = ft_get_line(buffer);
+	tmp = ft_get_reminder(buffer);
+	free(buffer);
+	buffer = tmp;
+	printf("buffer -> [%s]\n", buffer);
 	return (line);
-}
-
-int	main(void)
-{
-	int fd = open("file.txt", O_RDONLY);
-	if (fd < 0)
-		return (1);
-	char *line;
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("%s", line);
-		free(line);
-	}
-	close(fd);
-	return (0);
 }
