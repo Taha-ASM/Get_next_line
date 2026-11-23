@@ -22,7 +22,7 @@
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(char *str);
-int		whereareyou(char *buffer);
+int		is_line(char *buffer);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_get_line(char *str);
 char	*ft_get_reminder(char *str);

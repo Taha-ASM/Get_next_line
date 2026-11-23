@@ -10,9 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
 
 char	*ft_read(int fd, char *buffer)
 {
@@ -21,14 +20,14 @@ char	*ft_read(int fd, char *buffer)
 	int		count;
 
 	count = 1;
-	while (whereareyou(buffer) && count != 0)
+	while (is_line(buffer) && count != 0)
 	{
 		str = malloc(BUFFER_SIZE + 1);
 		if (!str)
 			return (free(buffer), NULL);
 		count = read(fd, str, BUFFER_SIZE);
 		if (count < 0)
-			return (free(str), NULL);
+			return (free(str), free(buffer), NULL);
 		str[count] = '\0';
 		tmp = ft_strjoin(buffer, str);
 		if (!tmp)
@@ -46,7 +45,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*tmp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &buffer, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = ft_read(fd, buffer);
 	if (!buffer || buffer[0] == '\0')
@@ -55,6 +54,5 @@ char	*get_next_line(int fd)
 	tmp = ft_get_reminder(buffer);
 	free(buffer);
 	buffer = tmp;
-	printf("buffer -> [%s]\n", buffer);
 	return (line);
 }

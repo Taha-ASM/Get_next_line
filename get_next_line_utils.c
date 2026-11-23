@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	if (!str)
@@ -24,7 +24,7 @@ size_t	ft_strlen(char *str)
 	return (i);
 }
 
-int	whereareyou(char *str)
+int	is_line(char *str)
 {
 	int	i;
 
@@ -85,6 +85,7 @@ char	*ft_get_line(char *buffer)
 	arr[x] = '\0';
 	return (arr);
 }
+
 char	*ft_get_reminder(char *buffer)
 {
 	int		i;
@@ -105,5 +106,3 @@ char	*ft_get_reminder(char *buffer)
 	arr[x] = '\0';
 	return (arr);
 }
-
-
