@@ -17,12 +17,12 @@ char	*ft_read(int fd, char *buffer)
 {
 	char	*str;
 	char	*tmp;
-	int		count;
+	ssize_t		count;
 
 	count = 1;
 	while (is_line(buffer) && count != 0)
 	{
-		str = malloc(BUFFER_SIZE + 1);
+		str = malloc((size_t)BUFFER_SIZE + 1);
 		if (!str)
 			return (free(buffer), NULL);
 		count = read(fd, str, BUFFER_SIZE);
@@ -31,7 +31,7 @@ char	*ft_read(int fd, char *buffer)
 		str[count] = '\0';
 		tmp = ft_strjoin(buffer, str);
 		if (!tmp)
-			return (free(str), NULL);
+			return (free(buffer), free(str), NULL);
 		free(str);
 		free(buffer);
 		buffer = tmp;

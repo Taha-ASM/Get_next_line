@@ -79,6 +79,45 @@ When the end of the file is reached and no characters remain, it returns `NULL`.
 6. Preserve the remaining characters for the next call.
 7. Return the line.
 
+## Bonus Part
+
+The bonus part extends the mandatory function so it can manage **multiple file descriptors at the same time**, without losing the reading state of each one.
+
+For example, you can call `get_next_line()` on file descriptor `3`, then on file descriptor `4`, then go back to `3`, and each file continues from exactly where it stopped.
+
+The bonus is implemented in separate files:
+
+- `get_next_line_bonus.c`
+- `get_next_line_utils_bonus.c`
+- `get_next_line_bonus.h`
+
+### Bonus Requirements
+
+- Use **only one static variable**.
+- Handle multiple file descriptors simultaneously.
+
+### How the Bonus Works
+
+In the mandatory part, a single static variable stores the remaining characters of one file. In the bonus part, the static variable becomes an array where **each file descriptor has its own slot** (indexed by the file descriptor value).
+
+This way, the leftover data of every open file is stored separately:
+
+- `stash[3]` keeps the remaining characters of file descriptor `3`.
+- `stash[4]` keeps the remaining characters of file descriptor `4`.
+- And so on for every other file descriptor.
+
+The rest of the algorithm (reading with `read()`, extracting the line, preserving the remaining data, returning the result) stays the same, but it is always applied to the slot that matches the given file descriptor.
+
+### Bonus Algorithm Summary
+
+1. Check that the file descriptor is valid (non-negative and within the supported range) and that `BUFFER_SIZE` is positive.
+2. Select the stored data that belongs to this specific file descriptor.
+3. Read data into a buffer and append it to that file descriptor's stored data.
+4. Continue reading until a newline or EOF is reached.
+5. Extract the current line.
+6. Preserve the remaining characters in the same file descriptor's slot.
+7. Return the line.
+
 ## Instructions
 
 ### Compilation
@@ -98,6 +137,13 @@ get_next_line.c get_next_line_utils.c main.c
 ```
 
 Replace `42` with another positive buffer size to test different reading conditions.
+
+To compile the **bonus** part:
+
+```bash
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 \
+get_next_line_bonus.c get_next_line_utils_bonus.c main.c
+```
 
 ### Execution
 
@@ -162,6 +208,7 @@ I would also like to thank the following peers from different promotions who hel
 - **momellou**
 - **mhaddou**
 - **waoukoud**
+- **irichi**
 
 Their explanations, guidance, debugging help, and willingness to help made a difference during my learning process.
 
