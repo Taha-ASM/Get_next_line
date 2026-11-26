@@ -209,6 +209,7 @@ I would also like to thank the following peers from different promotions who hel
 - **mhaddou**
 - **waoukoud**
 - **irichi**
+- **salkhali**
 
 Their explanations, guidance, debugging help, and willingness to help made a difference during my learning process.
 
